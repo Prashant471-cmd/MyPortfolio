@@ -288,7 +288,7 @@ export default function Page() {
         </nav>
         <div className="header-socials">
           <a
-            href="https://www.linkedin.com/in/prashant-deuja"
+            href="https://www.linkedin.com/in/prashant-deuja-16a899339"
             target="_blank"
             rel="noreferrer"
           >

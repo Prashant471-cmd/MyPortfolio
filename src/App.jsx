@@ -8,7 +8,7 @@ const projects = [
     tools: "Figma · Canva",
     tone: "coral",
     mark: "♫",
-    images: ["/music1.png", "/music2.png", "/music3.png", "/music4.png"]
+    images: ["/music1.png", "/music2.png", "/music3.png", "/music4.png"],
   },
   {
     title: "Attendance System",
@@ -17,6 +17,7 @@ const projects = [
     tools: "Figma · React · Tailwind",
     tone: "blue",
     mark: "↗",
+    images: ["/attendance1.png", "/attendance2.png", "/attendance3.png"],
   },
   {
     title: "Courier Management System",
@@ -25,6 +26,12 @@ const projects = [
     tools: "Figma · Canva",
     tone: "peach",
     mark: "✦",
+    images: [
+      "/Courier1.png",
+      "/Courier2.png",
+      "/Courier3.png",
+      "/Courier4.png",
+    ],
   },
   {
     title: "Music Web Application",
@@ -33,6 +40,7 @@ const projects = [
     tools: "React · JavaScript",
     tone: "violet",
     mark: "▶",
+    images: ["/webapp1.png", "/webapp2.png", "/webapp3.png"],
   },
 ];
 const skills = [
@@ -46,7 +54,14 @@ const skills = [
   "Design systems",
 ];
 
-function Typewriter({ text, delay = 0, onComplete, wrapper: Wrapper = "span", className = "", showCursor = false }) {
+function Typewriter({
+  text,
+  delay = 0,
+  onComplete,
+  wrapper: Wrapper = "span",
+  className = "",
+  showCursor = false,
+}) {
   const [displayedText, setDisplayedText] = useState("");
   const [isTyping, setIsTyping] = useState(false);
 
@@ -74,7 +89,9 @@ function Typewriter({ text, delay = 0, onComplete, wrapper: Wrapper = "span", cl
   return (
     <Wrapper className={className}>
       {displayedText}
-      {showCursor && isTyping && <span className="inline-block w-[3px] h-[1em] ml-1 align-middle bg-current animate-pulse" />}
+      {showCursor && isTyping && (
+        <span className="inline-block w-[3px] h-[1em] ml-1 align-middle bg-current animate-pulse" />
+      )}
     </Wrapper>
   );
 }
@@ -148,10 +165,42 @@ function useScrollProgress(ref) {
   }, [ref]);
 }
 
-function Tilt({
-  children,
-  className = "",
-}) {
+function ImageCarousel({ images, title }) {
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const intervalRef = useRef(null);
+
+  const handleMouseEnter = () => {
+    intervalRef.current = setInterval(() => {
+      setCurrentIndex((prev) => (prev + 1) % images.length);
+    }, 950);
+  };
+
+  const handleMouseLeave = () => {
+    clearInterval(intervalRef.current);
+    setCurrentIndex(0);
+  };
+
+  return (
+    <div
+      className="w-full h-full relative overflow-hidden"
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
+    >
+      {images.map((img, i) => (
+        <img
+          key={i}
+          src={img}
+          alt={`${title} screenshot ${i + 1}`}
+          className={`absolute inset-0 w-full h-full object-contain transition-opacity duration-700 ${
+            i === currentIndex ? "opacity-100" : "opacity-0"
+          }`}
+        />
+      ))}
+    </div>
+  );
+}
+
+function Tilt({ children, className = "" }) {
   const handleMove = (event) => {
     const box = event.currentTarget.getBoundingClientRect();
     const x = (event.clientX - box.left) / box.width - 0.5;
@@ -179,16 +228,38 @@ function Tilt({
 export default function Page() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [typingStep, setTypingStep] = useState(0);
+  const [showBackToTop, setShowBackToTop] = useState(false);
   const pageRef = useReveal();
   useScrollProgress(pageRef);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setShowBackToTop(window.scrollY > 300);
+    };
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
   return (
     <main className="site-shell" ref={pageRef}>
       <div className="scroll-rail" aria-hidden="true">
         <span />
       </div>
       <header className="site-header">
-        <a className="brand overflow-hidden" href="#top" aria-label="Prashant Deuja home">
-          <img src="/LogoMyself.png" alt="Prashant Deuja Logo" className="w-full h-full object-cover" />
+        <a
+          className="brand overflow-hidden"
+          href="#top"
+          aria-label="Prashant Deuja home"
+        >
+          <img
+            src="/LogoMyself.png"
+            alt="Prashant Deuja Logo"
+            className="w-full h-full object-cover"
+          />
         </a>
         <button
           className="menu-toggle"
@@ -235,43 +306,40 @@ export default function Page() {
       <section className="hero" id="top">
         <div className="hero-copy reveal">
           <p className="eyebrow">
-            <Typewriter 
-              text="Hello, I'm Prashant Deuja" 
+            <Typewriter
+              text="Hello, I'm Prashant Deuja"
               showCursor={typingStep === 0}
-              onComplete={() => setTypingStep(1)} 
+              onComplete={() => setTypingStep(1)}
             />
           </p>
           <h1>
             {typingStep >= 1 && (
-              <Typewriter 
-                text="I design" 
+              <Typewriter
+                text="I design"
                 showCursor={typingStep === 1}
-                onComplete={() => setTypingStep(2)} 
+                onComplete={() => setTypingStep(2)}
               />
             )}
             {typingStep >= 2 && <br />}
             {typingStep >= 2 && (
-              <Typewriter 
-                text="interfaces" 
+              <Typewriter
+                text="interfaces"
                 wrapper="em"
                 showCursor={typingStep === 2}
-                onComplete={() => setTypingStep(3)} 
+                onComplete={() => setTypingStep(3)}
               />
             )}
             {typingStep >= 3 && <br />}
             {typingStep >= 3 && (
-              <Typewriter 
-                text="that feel" 
+              <Typewriter
+                text="that feel"
                 showCursor={typingStep === 3}
-                onComplete={() => setTypingStep(4)} 
+                onComplete={() => setTypingStep(4)}
               />
             )}
             {typingStep >= 4 && <br />}
             {typingStep >= 4 && (
-              <Typewriter 
-                text="like home." 
-                showCursor={typingStep === 4}
-              />
+              <Typewriter text="like home." showCursor={typingStep === 4} />
             )}
           </h1>
           <p className="hero-intro">
@@ -290,10 +358,10 @@ export default function Page() {
           >
             <div className="art-grid" />
             <div className="art-circle" />
-            <img 
-              src="/mypic.png" 
-              alt="Prashant Deuja" 
-              className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[100%] h-[100%] object-contain z-10" 
+            <img
+              src="/mypic.png"
+              alt="Prashant Deuja"
+              className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[100%] h-[100%] object-contain z-10"
             />
             <div className="art-label label-one">&lt;design /&gt;</div>
             <div className="art-label label-two">{`{ code }`}</div>
@@ -354,19 +422,28 @@ export default function Page() {
               style={{ "--delay": `${index * 90}ms` }}
             >
               <Tilt>
-                <div className={`project-visual ${project.images ? 'has-images' : ''}`}>
+                <div
+                  className={`project-visual ${project.images ? "has-images" : ""}`}
+                >
                   {project.images ? (
-                    <div className="flex justify-center items-center gap-2 w-full h-full p-4 overflow-hidden">
-                      {project.images.map((img, i) => (
-                        <div key={i} className="flex-1 h-full relative group">
-                          <img 
-                            src={img}
-                            alt={`${project.title} screenshot ${i+1}`}
-                            className="absolute inset-0 w-full h-full object-contain rounded-lg shadow-lg group-hover:scale-[1.15] transition-transform duration-300"
-                          />
-                        </div>
-                      ))}
-                    </div>
+                    project.title === "Attendance System" ? (
+                      <ImageCarousel
+                        images={project.images}
+                        title={project.title}
+                      />
+                    ) : (
+                      <div className="flex justify-center items-center gap-2 w-full h-full p-4 overflow-hidden">
+                        {project.images.map((img, i) => (
+                          <div key={i} className="flex-1 h-full relative group">
+                            <img
+                              src={img}
+                              alt={`${project.title} screenshot ${i + 1}`}
+                              className="absolute inset-0 w-full h-full object-contain rounded-lg shadow-lg group-hover:scale-[1.15] transition-transform duration-300"
+                            />
+                          </div>
+                        ))}
+                      </div>
+                    )
                   ) : (
                     <>
                       <span className="project-mark">{project.mark}</span>
@@ -490,8 +567,33 @@ export default function Page() {
       <footer className="site-footer">
         <span>© 2026 Prashant Deuja</span>
         <span>Designed & built with curiosity</span>
-        <a href="#top">Back to top ↑</a>
+        <div className="footer-socials">
+          <a
+            href="https://www.linkedin.com/in/prashant-deuja"
+            target="_blank"
+            rel="noreferrer"
+            aria-label="LinkedIn"
+          >
+            <i className="fab fa-linkedin"></i>
+          </a>
+          <a
+            href="https://github.com/Prashant471-cmd"
+            target="_blank"
+            rel="noreferrer"
+            aria-label="GitHub"
+          >
+            <i className="fab fa-github"></i>
+          </a>
+        </div>
       </footer>
+      <button
+        className={`back-to-top ${showBackToTop ? "visible" : ""}`}
+        onClick={scrollToTop}
+        aria-label="Back to top"
+        title="Back to top"
+      >
+        ↑
+      </button>
     </main>
   );
 }

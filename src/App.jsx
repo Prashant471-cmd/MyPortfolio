@@ -569,7 +569,7 @@ export default function Page() {
         <span>Designed & built with curiosity</span>
         <div className="footer-socials">
           <a
-            href="https://www.linkedin.com/in/prashant-deuja"
+            href="https://www.linkedin.com/in/prashant-deuja-16a899339"
             target="_blank"
             rel="noreferrer"
             aria-label="LinkedIn"
